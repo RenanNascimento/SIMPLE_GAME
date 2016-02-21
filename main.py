@@ -68,7 +68,7 @@ def drawBlock():
     pygame.draw.rect(gameDisplay, gl.blue, [gl.block.x1, gl.y2Block_change, gl.block.size, gl.block.size])
 
     
-def drawObstacle(indexObstacle):
+def drawObstacle(indexLastObstacle):
 
 #    if gl.obstacle == []:
 #        gl.obstacle.append(Obstacle(gl.displayWidth,gl.block.y2))
@@ -82,9 +82,9 @@ def drawObstacle(indexObstacle):
 
     if gl.obstacle == []:
         gl.obstacle.append(Obstacle(gl.displayWidth,gl.block.y2))
-    elif(gl.displayWidth - gl.obstacle[indexObstacle].x1 >= gl.obstacleDist):
+    elif(gl.displayWidth - gl.obstacle[indexLastObstacle].x1 >= gl.obstacleDist):
             gl.obstacle.append(Obstacle(gl.displayWidth,gl.block.y2))  
-            indexObstacle = indexObstacle + 1            
+            indexLastObstacle = indexLastObstacle + 1            
             
     for i in range(len(gl.obstacle)):
         if not gl.pause:
@@ -94,10 +94,11 @@ def drawObstacle(indexObstacle):
                                           gl.obstacle[i].length,\
                                           gl.obstacle[i].hight])
 
-#    if gl.obstacle[0].x1 <= -100:
-#        gl.obstacle.pop(0)
-    
-    return indexObstacle
+    if gl.obstacle[0].x1 <= -100:
+        gl.obstacle.pop(0)
+        indexLastObstacle -= 1
+
+    return indexLastObstacle
 
 def yChangeRateBlock(y_auxBlock):
     
@@ -142,7 +143,7 @@ def gameLoop():
     index = 0
     y_auxBlock = 0
         
-    indexObstacle = 0    
+    indexLastObstacle = 0    
     
     while not gameExit:
         
@@ -163,7 +164,7 @@ def gameLoop():
                 yChangeRateBlock(y_auxBlock)
             drawBlock()     
             drawTunnel()
-            indexObstacle = drawObstacle(indexObstacle)
+            indexLastObstacle = drawObstacle(indexLastObstacle)
             collision()
     
             pygame.display.update()
@@ -181,7 +182,7 @@ def gameLoop():
 """
 pygame.init()
 gameDisplay = pygame.display.set_mode((gl.displayWidth,gl.displayHight))
-pygame.display.set_caption('Block Jump')
+pygame.display.set_caption('simple_game')
 clock = pygame.time.Clock()        
 
 """
