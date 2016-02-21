@@ -34,7 +34,7 @@ class Block(object):
         self.y1 = [(y1_line), (y2_line+self.size)]   
         self.y2 = [(self.y1[0]-self.size), (y2_line+tunnelLineWidth)]
         
-        self.yRateBlock = [10, 15, 20, 25, 30]
+        self.yRateBlock = 1
         
     def top (self, y2Block_change):
         return [self.x1, self.x2, y2Block_change]

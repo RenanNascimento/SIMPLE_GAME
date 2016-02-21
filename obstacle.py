@@ -33,7 +33,7 @@ y1   --|--         ------
 
 class Obstacle(object):
     def __init__(self, displayWidth, y2block):   
-        self.decrement = 20
+        self.decrement = 1
         
         self.hight = 90
         self.len = [20, 100]

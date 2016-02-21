@@ -14,6 +14,8 @@ from obstacle import Obstacle
 #Global variables
 class gl:
     
+    loopRange = 20   
+    
     """
     Window
     """
@@ -31,7 +33,7 @@ class gl:
     """
     Time
     """
-    FPS = 30
+    FPS = 60
 
     """
     Tunnel
@@ -44,7 +46,6 @@ class gl:
     block = Block(tunnel.y1_line, tunnel.y2_line,tunnel.lineWidth)
     y2Block_change = block.y2[0]
     y1Block_change = y2Block_change + block.size    
-    indexYRate = 0    
     
     """
     Obstacle
@@ -99,18 +100,13 @@ def drawObstacle(indexObstacle):
     return indexObstacle
 
 def yChangeRateBlock(y_auxBlock):
-
-    if gl.indexYRate == 5:
-        gl.indexYRate = 0
     
     if y_auxBlock == 1 and gl.y2Block_change != gl.block.y2[1]:
-        gl.y1Block_change -= gl.block.yRateBlock[gl.indexYRate]
-        gl.y2Block_change -= gl.block.yRateBlock[gl.indexYRate]
-        gl.indexYRate += 1
+        gl.y1Block_change -= gl.block.yRateBlock
+        gl.y2Block_change -= gl.block.yRateBlock
     elif y_auxBlock == 0 and gl.y2Block_change != gl.block.y2[0]:
-        gl.y1Block_change += gl.block.yRateBlock[gl.indexYRate]
-        gl.y2Block_change += gl.block.yRateBlock[gl.indexYRate]
-        gl.indexYRate += 1
+        gl.y1Block_change += gl.block.yRateBlock
+        gl.y2Block_change += gl.block.yRateBlock
 
 def collision():
 
@@ -143,34 +139,35 @@ def freeze():
 
 def gameLoop():    
     gameExit = False    
-    
+    index = 0
     y_auxBlock = 0
         
     indexObstacle = 0    
     
     while not gameExit:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                gameExit   = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    if gl.y2Block_change == gl.block.y2[0]:
-                        y_auxBlock = 1
-                    elif gl.y2Block_change == gl.block.y2[1]:
-                        y_auxBlock = 0
         
-        
-        gameDisplay.fill(gl.black)
+        for index in range(gl.loopRange):
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameExit   = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if gl.y2Block_change == gl.block.y2[0]:
+                            y_auxBlock = 1
+                        elif gl.y2Block_change == gl.block.y2[1]:
+                            y_auxBlock = 0
+    
+            gameDisplay.fill(gl.black)
+            if not gl.pause:
+                yChangeRateBlock(y_auxBlock)
+            drawBlock()     
+            drawTunnel()
+            indexObstacle = drawObstacle(indexObstacle)
+            collision()
+    
+            pygame.display.update()
 
-        if not gl.pause:
-            yChangeRateBlock(y_auxBlock)
-        drawBlock()        
-        drawTunnel()
-        indexObstacle = drawObstacle(indexObstacle)
-        collision()
-
-        pygame.display.update()
         clock.tick(gl.FPS)
 
     #Quit
